@@ -21,14 +21,6 @@ import lombok.Data;
  */
 <#if entityLombokModel>
 @Data
-<#--    <#if superEntityClass??>-->
-<#--@EqualsAndHashCode(callSuper = true)-->
-<#--    <#else>-->
-<#--@EqualsAndHashCode(callSuper = false)-->
-<#--    </#if>-->
-</#if>
-<#if table.convert>
-@TableName("${table.name}")
 </#if>
 <#if swagger2>
 @ApiModel(value="${entity}对象", description="${table.comment!}")
@@ -130,19 +122,5 @@ public class ${entity}{
     </#if>
     }
 
-</#if>
-<#if !entityLombokModel>
-    @Override
-    public String toString() {
-        return "${entity}{" +
-    <#list table.fields as field>
-        <#if field_index==0>
-            "${field.propertyName}=" + ${field.propertyName} +
-        <#else>
-            ", ${field.propertyName}=" + ${field.propertyName} +
-        </#if>
-    </#list>
-        "}";
-    }
 </#if>
 }

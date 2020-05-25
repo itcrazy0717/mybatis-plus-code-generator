@@ -148,6 +148,7 @@ public class CodeGeneratorUtil {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
+        strategy.setEntityTableFieldAnnotationEnable(false);
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         // 不需要设置父类

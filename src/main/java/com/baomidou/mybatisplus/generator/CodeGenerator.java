@@ -1,6 +1,7 @@
 package com.baomidou.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.dto.CodeTemplateInfo;
+import com.baomidou.mybatisplus.generator.enums.DataSourceEnum;
 import com.baomidou.mybatisplus.generator.utils.CodeGeneratorUtil;
 
 /**
@@ -19,15 +20,17 @@ public class CodeGenerator {
     public static void main(String[] args) {
 
         /**
-         * 数据源：
-         * 1-本地
+         * 数据源
          * 可根据情况进行添加
          */
-        int dataSource = 1;
-        String tableName = "test";
-        String dataBaseName = "dev-test";
-        String packageName = "com.cdx.test";
+        DataSourceEnum dataSource = DataSourceEnum.LOCAL;
+        String tableName = "user";
+        String dataBaseName = "my_opt";
+        String packageName = "com.practice.es";
 
+        /**
+         * 构建代码模板信息
+         */
         CodeTemplateInfo codeTemplate = CodeTemplateInfo.builder()
                                                         .dataSource(dataSource)
                                                         .tableName(tableName)

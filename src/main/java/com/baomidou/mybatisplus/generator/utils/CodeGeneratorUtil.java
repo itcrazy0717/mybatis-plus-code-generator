@@ -33,6 +33,7 @@ public class CodeGeneratorUtil {
 
     /**
      * 获取自动生成器
+     * by dengxin.chen
      *
      * @param codeTemplateInfo 代码模板信息
      * @return
@@ -40,27 +41,28 @@ public class CodeGeneratorUtil {
     public static AutoGenerator getAutoGenerator(CodeTemplateInfo codeTemplateInfo) {
         AutoGenerator autoGenerator = new AutoGenerator();
         // 设置全局配置
-        autoGenerator.setGlobalConfig(getGlobalConfig());
+        autoGenerator.setGlobalConfig(generateGlobalConfig());
         // 设置数据库连接配置
-        autoGenerator.setDataSource(getDataSourceConfig(codeTemplateInfo.getDataSource(), codeTemplateInfo.getDataBaseName()));
+        autoGenerator.setDataSource(generateDataSourceConfig(codeTemplateInfo.getDataSource(), codeTemplateInfo.getDataBaseName()));
         // 设置包名
-        PackageConfig packageConfig = getPackageConfig(codeTemplateInfo.getPackageName());
+        PackageConfig packageConfig = generatePackageConfig(codeTemplateInfo.getPackageName());
         autoGenerator.setPackageInfo(packageConfig);
         // 设置mapper路径
-        autoGenerator.setCfg(getInjectionConfig());
+        autoGenerator.setCfg(generateInjectionConfig());
         // 其他配置
-        otherConfig(autoGenerator, codeTemplateInfo.getTableName(), packageConfig);
+        setOtherConfig(autoGenerator, codeTemplateInfo.getTableName(), packageConfig);
         return autoGenerator;
     }
 
     /**
-     * 获取数据源配置
+     * 生成数据源配置
+     * by dengxin.chen
      *
-     * @param dataSource
-     * @param dataBaseName
+     * @param dataSource   数据源配置
+     * @param dataBaseName 数据库名
      * @return
      */
-    private static DataSourceConfig getDataSourceConfig(int dataSource, String dataBaseName) {
+    private static DataSourceConfig generateDataSourceConfig(DataSourceEnum dataSource, String dataBaseName) {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         DataSourceEnum.ConnectionConfig connectionConfig = DataConnectionUtil.getDataConnectionConfig(dataSource, dataBaseName);
         if (Objects.isNull(connectionConfig)) {
@@ -75,11 +77,12 @@ public class CodeGeneratorUtil {
     }
 
     /**
-     * 获取全局配置
+     * 生成全局配置
+     * by dengxin.chen
      *
      * @return
      */
-    private static GlobalConfig getGlobalConfig() {
+    private static GlobalConfig generateGlobalConfig() {
         GlobalConfig globalConfig = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         globalConfig.setOutputDir(projectPath + "/code_generator/src/main/java");
@@ -88,17 +91,18 @@ public class CodeGeneratorUtil {
         globalConfig.setServiceName("%sService");
         globalConfig.setOpen(false);
         // 删除之前模板文件
-        deleteTemplateFile(projectPath);
+        deleteOldTemplateFile(projectPath);
         return globalConfig;
     }
 
     /**
-     * 获取包配置
+     * 生成配置
+     * by dengxin.chen
      *
      * @param packageName
      * @return
      */
-    private static PackageConfig getPackageConfig(String packageName) {
+    private static PackageConfig generatePackageConfig(String packageName) {
         PackageConfig packageConfig = new PackageConfig();
         // 暂时屏蔽模块名称
         // packageConfig.setModuleName(scanner("模块名"));
@@ -109,11 +113,12 @@ public class CodeGeneratorUtil {
     }
 
     /**
-     * 获取mapper文件配置
+     * 生成mapper文件配置信息
+     * by dengxin.chen
      *
      * @return
      */
-    private static InjectionConfig getInjectionConfig() {
+    private static InjectionConfig generateInjectionConfig() {
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {
@@ -134,12 +139,13 @@ public class CodeGeneratorUtil {
 
     /**
      * 进行其他配置
+     * by dengxin.chen
      *
      * @param autoGenerator
      * @param tableName
      * @param packageConfig
      */
-    private static void otherConfig(AutoGenerator autoGenerator, String tableName, PackageConfig packageConfig) {
+    private static void setOtherConfig(AutoGenerator autoGenerator, String tableName, PackageConfig packageConfig) {
         // 使用自定义模板
         TemplateConfig templateConfig = new TemplateConfig();
         templateConfig.setEntity("templates/entity.java");
@@ -165,36 +171,37 @@ public class CodeGeneratorUtil {
         autoGenerator.setTemplateEngine(new FreemarkerTemplateEngine());
     }
 
-
     /**
      * 删除之前模板文件
      *
      * @param path 路径
      */
-    private static void deleteTemplateFile(String path) {
+    private static void deleteOldTemplateFile(String path) {
         File file = new File(path + "/code_generator/");
         boolean result = deleteDir(file);
         if (result) {
             System.out.println("旧代码模板文件删除成功！！！！！！");
             System.out.println("===========================================");
-        }
-        else {
-            System.out.println("code模板文件删除失败");
+        } else {
+            System.out.println("旧代码模板文件删除失败");
         }
     }
 
-
     /**
      * 删除文件
+     * by dengxin.chen
      *
      * @param dir
      * @return
      */
     private static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (String child : children) {
-                boolean success = deleteDir(new File(dir, child));
+            String[] listDir = dir.list();
+            if (Objects.isNull(listDir)) {
+                return true;
+            }
+            for (String childDir : listDir) {
+                boolean success = deleteDir(new File(dir, childDir));
                 if (!success) {
                     return false;
                 }

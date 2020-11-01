@@ -16,16 +16,21 @@ import lombok.NoArgsConstructor;
 public class DataConnectionUtil {
 
     /**
+     * 数据库名占位符
+     */
+    public static final String PLACE_HOLDER_DATABASE_NAME = "placeholderDataBaseName";
+
+    /**
      * 获取数据源连接配置
      *
      * @param dataSource   数据源类型
      * @param dataBaseName 数据库名称
      * @return
      */
-    public static DataSourceEnum.ConnectionConfig getDataConnectionConfig(int dataSource, String dataBaseName) {
+    public static DataSourceEnum.ConnectionConfig getDataConnectionConfig(DataSourceEnum dataSource, String dataBaseName) {
         DataSourceEnum.ConnectionConfig config = DataSourceEnum.getConnectionConfig(dataSource);
         if (Objects.nonNull(config)) {
-            String url = config.getUrl().replace("tmpDataBaseName", dataBaseName);
+            String url = config.getUrl().replace(PLACE_HOLDER_DATABASE_NAME, dataBaseName);
             config.setUrl(url);
             return config;
         }

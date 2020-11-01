@@ -1,5 +1,7 @@
 package com.baomidou.mybatisplus.generator.dto;
 
+import com.baomidou.mybatisplus.generator.enums.DataSourceEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +19,11 @@ import lombok.NoArgsConstructor;
 public class CodeTemplateInfo {
 
     /**
-     * 数据源类型，参考枚举值
+     * 数据源类型
+     *
+     * @see com.baomidou.mybatisplus.generator.enums.DataSourceEnum
      */
-    private int dataSource;
+    private DataSourceEnum dataSource;
 
     /**
      * 数据表名
